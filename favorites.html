@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Favorites - ShopZone</title>
+<link rel="stylesheet" href="css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+<div class="topbar">
+  <span><i class="fa fa-truck"></i> Free Shipping on orders over $50</span>
+  <span><i class="fa fa-headset"></i> 24/7 Support</span>
+  <span><i class="fa fa-tag"></i> Summer Sale — Up to 40% OFF</span>
+</div>
+<nav class="navbar">
+  <a href="index.html" class="logo">Shop<span>Zone</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="categories.html">Categories</a>
+    <a href="products.html">Products</a>
+    <a href="favorites.html" class="active">Favorites</a>
+    <a href="cart.html">Cart</a>
+  </div>
+  <div class="nav-search">
+    <input type="text" id="searchInput" placeholder="Search products...">
+    <button onclick="searchProducts()"><i class="fa fa-search"></i></button>
+  </div>
+  <div class="nav-icons">
+    <a href="favorites.html" class="icon-btn"><i class="fa fa-heart"></i><span class="badge" id="favCount"></span></a>
+    <a href="cart.html" class="icon-btn"><i class="fa fa-shopping-cart"></i><span class="badge" id="cartCount"></span></a>
+  </div>
+  <div class="hamburger" onclick="toggleMenu()"><i class="fa fa-bars"></i></div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html">Home</a>
+  <a href="categories.html">Categories</a>
+  <a href="products.html">Products</a>
+  <a href="favorites.html">Favorites</a>
+  <a href="cart.html">Cart</a>
+</div>
+
+<div class="page-header">
+  <h1>My Favorites</h1>
+  <p>Products you love, saved for later</p>
+  <div class="breadcrumb"><a href="index.html">Home</a> / <span>Favorites</span></div>
+</div>
+
+<section class="favorites-section container">
+  <div id="favContent"></div>
+</section>
+
+<div class="toast" id="toast"></div>
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fa fa-arrow-up"></i></button>
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <div class="logo">Shop<span>Zone</span></div>
+      <p>Your one-stop destination for premium products at unbeatable prices.</p>
+      <div class="social-links">
+        <a href="#"><i class="fab fa-facebook"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-youtube"></i></a>
+      </div>
+    </div>
+    <div class="footer-links">
+      <h4>Quick Links</h4>
+      <a href="index.html">Home</a>
+      <a href="products.html">Products</a>
+      <a href="categories.html">Categories</a>
+      <a href="cart.html">Cart</a>
+      <a href="favorites.html">Favorites</a>
+    </div>
+    <div class="footer-links">
+      <h4>Support</h4>
+      <a href="#">FAQ</a>
+      <a href="#">Shipping Policy</a>
+      <a href="#">Return Policy</a>
+      <a href="#">Contact Us</a>
+      <a href="#">Privacy Policy</a>
+    </div>
+    <div class="footer-links">
+      <h4>Contact</h4>
+      <p><i class="fa fa-map-marker-alt"></i> Karachi, Pakistan</p>
+      <p><i class="fa fa-phone"></i> +92-300-1234567</p>
+      <p><i class="fa fa-envelope"></i> info@shopzone.pk</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2025 ShopZone. All rights reserved.</p>
+    <div class="payment-icons">
+      <i class="fab fa-cc-visa"></i>
+      <i class="fab fa-cc-mastercard"></i>
+      <i class="fab fa-cc-paypal"></i>
+      <i class="fab fa-cc-apple-pay"></i>
+    </div>
+  </div>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="js/main.js"></script>
+<script>
+$(document).ready(function(){ renderFavorites(); updateBadges(); });
+
+function renderFavorites(){
+  const favs = getFavorites();
+  if(!favs.length){
+    $('#favContent').html(`<div class="fav-empty"><i class="fa fa-heart"></i><h2>No favorites yet</h2><p style="color:#6b7280;margin-bottom:28px">Save products you love by clicking the heart icon</p><a href="products.html" class="btn-primary"><i class="fa fa-arrow-left"></i> Discover Products</a></div>`);
+    return;
+  }
+  let html = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:28px"><h2 style="font-family:var(--font-display);font-size:24px">${favs.length} Saved Item${favs.length>1?'s':''}</h2><button onclick="clearFavs()" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:14px;font-weight:600"><i class="fa fa-trash"></i> Clear All</button></div>`;
+  html += '<div class="products-grid">';
+  favs.forEach(p => { html += buildProductCard(p); });
+  html += '</div>';
+  $('#favContent').html(html);
+}
+
+function clearFavs(){
+  if(!confirm('Remove all favorites?')) return;
+  localStorage.removeItem('favorites');
+  renderFavorites(); updateBadges();
+  showToast('All favorites cleared');
+}
+
+function searchProducts(){
+  const q = $('#searchInput').val().trim();
+  if(q) window.location.href = `products.html?search=${encodeURIComponent(q)}`;
+}
+$('#searchInput').keypress(function(e){ if(e.which===13) searchProducts(); });
+</script>
+</body>
+</html>

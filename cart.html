@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Cart - ShopZone</title>
+<link rel="stylesheet" href="css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<div class="topbar">
+  <span><i class="fa fa-truck"></i> Free Shipping on orders over $50</span>
+  <span><i class="fa fa-headset"></i> 24/7 Support</span>
+  <span><i class="fa fa-tag"></i> Summer Sale — Up to 40% OFF</span>
+</div>
+<nav class="navbar">
+  <a href="index.html" class="logo">Shop<span>Zone</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="categories.html">Categories</a>
+    <a href="products.html">Products</a>
+    <a href="favorites.html">Favorites</a>
+    <a href="cart.html" class="active">Cart</a>
+  </div>
+  <div class="nav-search">
+    <input type="text" id="searchInput" placeholder="Search products...">
+    <button onclick="searchProducts()"><i class="fa fa-search"></i></button>
+  </div>
+  <div class="nav-icons">
+    <a href="favorites.html" class="icon-btn"><i class="fa fa-heart"></i><span class="badge" id="favCount"></span></a>
+    <a href="cart.html" class="icon-btn"><i class="fa fa-shopping-cart"></i><span class="badge" id="cartCount"></span></a>
+  </div>
+  <div class="hamburger" onclick="toggleMenu()"><i class="fa fa-bars"></i></div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html">Home</a>
+  <a href="categories.html">Categories</a>
+  <a href="products.html">Products</a>
+  <a href="favorites.html">Favorites</a>
+  <a href="cart.html">Cart</a>
+</div>
+
+<div class="page-header">
+  <h1>Shopping Cart</h1>
+  <div class="breadcrumb"><a href="index.html">Home</a> / <span>Cart</span></div>
+</div>
+
+<section class="cart-section container">
+  <div id="cartContent"></div>
+</section>
+
+<div class="toast" id="toast"></div>
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fa fa-arrow-up"></i></button>
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <div class="logo">Shop<span>Zone</span></div>
+      <p>Your one-stop destination for premium products at unbeatable prices.</p>
+      <div class="social-links">
+        <a href="#"><i class="fab fa-facebook"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-youtube"></i></a>
+      </div>
+    </div>
+    <div class="footer-links">
+      <h4>Quick Links</h4>
+      <a href="index.html">Home</a>
+      <a href="products.html">Products</a>
+      <a href="categories.html">Categories</a>
+      <a href="cart.html">Cart</a>
+      <a href="favorites.html">Favorites</a>
+    </div>
+    <div class="footer-links">
+      <h4>Support</h4>
+      <a href="#">FAQ</a>
+      <a href="#">Shipping Policy</a>
+      <a href="#">Return Policy</a>
+      <a href="#">Contact Us</a>
+      <a href="#">Privacy Policy</a>
+    </div>
+    <div class="footer-links">
+      <h4>Contact</h4>
+      <p><i class="fa fa-map-marker-alt"></i> Karachi, Pakistan</p>
+      <p><i class="fa fa-phone"></i> +92-300-1234567</p>
+      <p><i class="fa fa-envelope"></i> info@shopzone.pk</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2025 ShopZone. All rights reserved.</p>
+    <div class="payment-icons">
+      <i class="fab fa-cc-visa"></i>
+      <i class="fab fa-cc-mastercard"></i>
+      <i class="fab fa-cc-paypal"></i>
+      <i class="fab fa-cc-apple-pay"></i>
+    </div>
+  </div>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="js/main.js"></script>
+<script>
+let appliedCoupon = 0;
+const coupons = { 'SAVE10': 10, 'SHOP20': 20, 'FIRST15': 15 };
+
+$(document).ready(function(){ renderCart(); updateBadges(); });
+
+function renderCart(){
+  const cart = getCart();
+  if(!cart.length){
+    $('#cartContent').html(`
+      <div class="cart-empty">
+        <i class="fa fa-shopping-cart"></i>
+        <h2>Your cart is empty</h2>
+        <p style="color:#6b7280;margin-bottom:28px">Looks like you haven't added anything yet</p>
+        <a href="products.html" class="btn-primary"><i class="fa fa-arrow-left"></i> Continue Shopping</a>
+      </div>`);
+    return;
+  }
+  
+  const subtotal = cart.reduce((s,i)=>s+(i.price*i.qty),0);
+  const shipping = subtotal>=50 ? 0 : 5.99;
+  const discount = appliedCoupon;
+  const discountAmt = (subtotal * discount/100);
+  const total = subtotal - discountAmt + shipping;
+  
+  let itemsHtml = '';
+  cart.forEach(item => {
+    itemsHtml += `
+    <div class="cart-item" data-id="${item.id}">
+      <div class="cart-item-img"><img src="${item.image}" alt="${item.title}"></div>
+      <div class="cart-item-info">
+        <h4><a href="product-detail.html?id=${item.id}">${item.title.substring(0,50)}...</a></h4>
+        <span>${item.category}</span>
+        <div style="color:#c8a96e;font-weight:700;margin-top:4px">$${item.price.toFixed(2)} each</div>
+      </div>
+      <div class="qty-control">
+        <button class="qty-btn" onclick="changeQty(${item.id},-1)">−</button>
+        <input class="qty-input" type="number" value="${item.qty}" min="1" onchange="setQty(${item.id}, this.value)">
+        <button class="qty-btn" onclick="changeQty(${item.id},1)">+</button>
+      </div>
+      <div style="font-weight:700;font-size:17px">$${(item.price*item.qty).toFixed(2)}</div>
+      <button class="remove-btn" onclick="deleteItem(${item.id})"><i class="fa fa-trash"></i></button>
+    </div>`;
+  });
+
+  $('#cartContent').html(`
+  <div class="cart-layout">
+    <div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+        <h2 style="font-family:var(--font-display);font-size:22px">${cart.length} Item${cart.length>1?'s':''} in Cart</h2>
+        <button onclick="clearCart()" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:14px;font-weight:600"><i class="fa fa-trash"></i> Clear All</button>
+      </div>
+      <div class="cart-table">
+        <div class="cart-table-header">
+          <span>Image</span><span>Product</span><span>Qty</span><span>Total</span><span>Remove</span>
+        </div>
+        ${itemsHtml}
+      </div>
+      <div style="margin-top:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+        <a href="products.html" class="btn-secondary"><i class="fa fa-arrow-left"></i> Continue Shopping</a>
+        <button onclick="renderCart()" class="btn-secondary"><i class="fa fa-sync"></i> Update Cart</button>
+      </div>
+    </div>
+    
+    <div class="cart-summary">
+      <h3>Order Summary</h3>
+      <div class="summary-row"><span>Subtotal (${cart.reduce((s,i)=>s+i.qty,0)} items)</span><span>$${subtotal.toFixed(2)}</span></div>
+      ${discount>0 ? `<div class="summary-row" style="color:#16a34a"><span>Discount (${discount}%)</span><span>-$${discountAmt.toFixed(2)}</span></div>` : ''}
+      <div class="summary-row"><span>Shipping</span><span>${shipping===0?'<span style="color:#16a34a;font-weight:600">FREE</span>':'$'+shipping.toFixed(2)}</span></div>
+      <div class="summary-row summary-total"><strong>Total</strong><strong style="color:var(--primary);font-size:22px">$${total.toFixed(2)}</strong></div>
+      
+      <div class="coupon-field">
+        <input type="text" id="couponInput" placeholder="Enter coupon code">
+        <button class="btn-primary" onclick="applyCoupon()">Apply</button>
+      </div>
+      <p style="font-size:12px;color:#6b7280;margin-bottom:20px">Try: SAVE10, SHOP20, FIRST15</p>
+      
+      ${shipping===0 ? '<p style="background:#f0fdf4;color:#16a34a;padding:10px 14px;border-radius:8px;font-size:13px;font-weight:600;margin-bottom:16px"><i class="fa fa-check-circle"></i> You qualify for FREE shipping!</p>' : `<p style="background:#fffbeb;color:#d97706;padding:10px 14px;border-radius:8px;font-size:13px;font-weight:600;margin-bottom:16px"><i class="fa fa-info-circle"></i> Add $${(50-subtotal).toFixed(2)} more for FREE shipping</p>`}
+      
+      <a href="checkout.html" class="btn-primary" style="width:100%;justify-content:center;padding:16px;font-size:16px">
+        Proceed to Checkout <i class="fa fa-arrow-right"></i>
+      </a>
+      
+      <div style="display:flex;justify-content:center;gap:12px;margin-top:16px;font-size:22px;color:#9ca3af">
+        <i class="fab fa-cc-visa"></i><i class="fab fa-cc-mastercard"></i><i class="fab fa-cc-paypal"></i><i class="fab fa-cc-apple-pay"></i>
+      </div>
+    </div>
+  </div>`);
+}
+
+function changeQty(id, dir){
+  let cart = getCart();
+  const item = cart.find(i=>i.id===id);
+  if(item){ item.qty = Math.max(1, item.qty+dir); }
+  saveCart(cart); renderCart();
+}
+
+function setQty(id, val){
+  let cart = getCart();
+  const item = cart.find(i=>i.id===id);
+  if(item){ item.qty = Math.max(1, parseInt(val)||1); }
+  saveCart(cart); renderCart();
+}
+
+function deleteItem(id){
+  if(!confirm('Remove this item from cart?')) return;
+  removeFromCart(id); renderCart(); updateBadges();
+}
+
+function clearCart(){
+  if(!confirm('Clear all items from cart?')) return;
+  localStorage.removeItem('cart'); renderCart(); updateBadges();
+  showToast('Cart cleared');
+}
+
+function applyCoupon(){
+  const code = $('#couponInput').val().trim().toUpperCase();
+  if(coupons[code]){
+    appliedCoupon = coupons[code];
+    showToast(`✓ Coupon applied! ${coupons[code]}% discount`, 'success');
+    renderCart();
+  } else {
+    showToast('Invalid coupon code', 'error');
+  }
+}
+
+function searchProducts(){
+  const q = $('#searchInput').val().trim();
+  if(q) window.location.href = `products.html?search=${encodeURIComponent(q)}`;
+}
+$('#searchInput').keypress(function(e){ if(e.which===13) searchProducts(); });
+</script>
+</body>
+</html>

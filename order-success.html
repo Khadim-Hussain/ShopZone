@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Order Placed! - ShopZone</title>
+<link rel="stylesheet" href="css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+@keyframes popIn { 0%{transform:scale(0);opacity:0} 70%{transform:scale(1.15)} 100%{transform:scale(1);opacity:1} }
+@keyframes fadeUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+.success-icon { animation: popIn 0.6s ease 0.3s both; }
+.success-card > * { animation: fadeUp 0.5s ease both; }
+.success-card > *:nth-child(2) { animation-delay: 0.5s; }
+.success-card > *:nth-child(3) { animation-delay: 0.7s; }
+.success-card > *:nth-child(4) { animation-delay: 0.9s; }
+.success-card > *:nth-child(5) { animation-delay: 1.1s; }
+.confetti { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span><i class="fa fa-truck"></i> Free Shipping on orders over $50</span>
+  <span><i class="fa fa-headset"></i> 24/7 Support</span>
+  <span><i class="fa fa-tag"></i> Summer Sale — Up to 40% OFF</span>
+</div>
+<nav class="navbar">
+  <a href="index.html" class="logo">Shop<span>Zone</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="categories.html">Categories</a>
+    <a href="products.html">Products</a>
+    <a href="favorites.html">Favorites</a>
+    <a href="cart.html">Cart</a>
+  </div>
+  <div class="nav-icons">
+    <a href="favorites.html" class="icon-btn"><i class="fa fa-heart"></i><span class="badge" id="favCount"></span></a>
+    <a href="cart.html" class="icon-btn"><i class="fa fa-shopping-cart"></i><span class="badge" id="cartCount"></span></a>
+  </div>
+  <div class="hamburger" onclick="toggleMenu()"><i class="fa fa-bars"></i></div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html">Home</a>
+  <a href="categories.html">Categories</a>
+  <a href="products.html">Products</a>
+  <a href="favorites.html">Favorites</a>
+  <a href="cart.html">Cart</a>
+</div>
+
+<canvas class="confetti" id="confetti"></canvas>
+
+<section class="success-section">
+  <div class="success-card" style="position:relative;z-index:1">
+    <div class="success-icon">
+      <i class="fa fa-check" style="font-size:48px;color:white;background:linear-gradient(135deg,#10b981,#059669);width:100px;height:100px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 28px"></i>
+    </div>
+    <h1 style="font-family:var(--font-display);font-size:36px;margin-bottom:12px">Order Placed!</h1>
+    <p style="color:#6b7280;font-size:16px;margin-bottom:32px">Thank you for shopping with ShopZone! Your order has been confirmed and will be delivered soon.</p>
+    
+    <div class="order-number">
+      <span>Your Order Number</span>
+      <h3 id="orderNum">#SZ00000000</h3>
+    </div>
+
+    <div style="background:#f9fafb;border-radius:12px;padding:24px;margin-bottom:32px;text-align:left">
+      <h4 style="margin-bottom:16px;font-size:15px;font-weight:700">What happens next?</h4>
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;gap:14px;align-items:flex-start">
+          <div style="width:32px;height:32px;background:var(--primary);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--dark);flex-shrink:0">1</div>
+          <div><strong>Order Confirmed</strong><p style="color:#6b7280;font-size:13px;margin-top:2px">You'll receive an email confirmation shortly</p></div>
+        </div>
+        <div style="display:flex;gap:14px;align-items:flex-start">
+          <div style="width:32px;height:32px;background:#e5e7eb;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0">2</div>
+          <div><strong>Processing</strong><p style="color:#6b7280;font-size:13px;margin-top:2px">Your order is being prepared (1-2 days)</p></div>
+        </div>
+        <div style="display:flex;gap:14px;align-items:flex-start">
+          <div style="width:32px;height:32px;background:#e5e7eb;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0">3</div>
+          <div><strong>Shipped</strong><p style="color:#6b7280;font-size:13px;margin-top:2px">Tracking info will be sent to your email</p></div>
+        </div>
+        <div style="display:flex;gap:14px;align-items:flex-start">
+          <div style="width:32px;height:32px;background:#e5e7eb;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0">4</div>
+          <div><strong>Delivered!</strong><p style="color:#6b7280;font-size:13px;margin-top:2px">Enjoy your purchase!</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <a href="index.html" class="btn-primary"><i class="fa fa-home"></i> Back to Home</a>
+      <a href="products.html" class="btn-secondary"><i class="fa fa-shopping-bag"></i> Continue Shopping</a>
+    </div>
+  </div>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+const orderId = localStorage.getItem('lastOrder') || ('SZ' + Date.now().toString().slice(-8));
+$('#orderNum').text('#' + orderId);
+
+// Simple confetti
+const canvas = document.getElementById('confetti');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+const particles = [];
+const colors = ['#c8a96e','#10b981','#3b82f6','#f59e0b','#ef4444','#8b5cf6'];
+for(let i=0;i<120;i++){
+  particles.push({
+    x: Math.random()*canvas.width, y: Math.random()*canvas.height-canvas.height,
+    w: Math.random()*10+4, h: Math.random()*6+3,
+    color: colors[Math.floor(Math.random()*colors.length)],
+    speed: Math.random()*3+1, angle: Math.random()*360, spin: Math.random()*4-2
+  });
+}
+let animFrame;
+function animate(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particles.forEach(p=>{
+    p.y += p.speed; p.angle += p.spin;
+    ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.angle*Math.PI/180);
+    ctx.fillStyle = p.color; ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
+    ctx.restore();
+    if(p.y > canvas.height) p.y = -20;
+  });
+  animFrame = requestAnimationFrame(animate);
+}
+animate();
+setTimeout(()=>cancelAnimationFrame(animFrame), 5000);
+</script>
+</body>
+</html>

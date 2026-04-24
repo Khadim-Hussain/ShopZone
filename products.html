@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>All Products - ShopZone</title>
+<link rel="stylesheet" href="css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<div class="topbar">
+  <span><i class="fa fa-truck"></i> Free Shipping on orders over $50</span>
+  <span><i class="fa fa-tag"></i> Summer Sale — Up to 40% OFF</span>
+</div>
+
+<nav class="navbar">
+  <a href="index.html" class="logo">Shop<span>Zone</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="categories.html">Categories</a>
+    <a href="products.html" class="active">Products</a>
+    <a href="favorites.html">Favorites</a>
+    <a href="cart.html">Cart</a>
+  </div>
+  <div class="nav-search">
+    <input type="text" id="searchInput" placeholder="Search products...">
+    <button onclick="searchProducts()"><i class="fa fa-search"></i></button>
+  </div>
+  <div class="nav-icons">
+    <a href="favorites.html" class="icon-btn"><i class="fa fa-heart"></i><span class="badge" id="favCount">0</span></a>
+    <a href="cart.html" class="icon-btn"><i class="fa fa-shopping-cart"></i><span class="badge" id="cartCount">0</span></a>
+  </div>
+  <div class="hamburger" onclick="toggleMenu()"><i class="fa fa-bars"></i></div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html">Home</a><a href="categories.html">Categories</a><a href="products.html">Products</a><a href="favorites.html">Favorites</a><a href="cart.html">Cart</a>
+</div>
+
+<div class="page-header">
+  <h1>All Products</h1>
+  <p>Discover our amazing collection of premium products</p>
+  <div class="breadcrumb"><a href="index.html">Home</a> / <span>Products</span></div>
+</div>
+
+<div class="filters-bar">
+  <div class="filters-inner">
+    <button class="filter-btn active" onclick="filterBy('all', this)">All</button>
+    <button class="filter-btn" onclick="filterBy('electronics', this)">Electronics</button>
+    <button class="filter-btn" onclick="filterBy(`men's clothing`, this)">Men's</button>
+    <button class="filter-btn" onclick="filterBy(`women's clothing`, this)">Women's</button>
+    <button class="filter-btn" onclick="filterBy('jewelery', this)">Jewelry</button>
+    <span class="filter-count" id="filterCount"></span>
+    <select class="sort-select" id="sortSelect" onchange="sortProducts()">
+      <option value="default">Default</option>
+      <option value="price-asc">Price: Low to High</option>
+      <option value="price-desc">Price: High to Low</option>
+      <option value="rating">Top Rated</option>
+      <option value="name">Name A-Z</option>
+    </select>
+  </div>
+</div>
+
+<section class="products-section container">
+  <div class="products-grid" id="productsGrid">
+    <div class="loading-spinner"><i class="fa fa-spinner fa-spin"></i> Loading products...</div>
+  </div>
+</section>
+
+<div class="toast" id="toast"></div>
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fa fa-arrow-up"></i></button>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <div class="logo">Shop<span>Zone</span></div>
+      <p>Your one-stop destination for premium products at unbeatable prices.</p>
+      <div class="social-links">
+        <a href="#"><i class="fab fa-facebook"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-youtube"></i></a>
+      </div>
+    </div>
+    <div class="footer-links">
+      <h4>Quick Links</h4>
+      <a href="index.html">Home</a>
+      <a href="products.html">Products</a>
+      <a href="categories.html">Categories</a>
+      <a href="cart.html">Cart</a>
+      <a href="favorites.html">Favorites</a>
+    </div>
+    <div class="footer-links">
+      <h4>Support</h4>
+      <a href="#">FAQ</a>
+      <a href="#">Shipping Policy</a>
+      <a href="#">Return Policy</a>
+      <a href="#">Contact Us</a>
+      <a href="#">Privacy Policy</a>
+    </div>
+    <div class="footer-links">
+      <h4>Contact</h4>
+      <p><i class="fa fa-map-marker-alt"></i> Karachi, Pakistan</p>
+      <p><i class="fa fa-phone"></i> +92-300-1234567</p>
+      <p><i class="fa fa-envelope"></i> info@shopzone.pk</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2025 ShopZone. All rights reserved.</p>
+    <div class="payment-icons">
+      <i class="fab fa-cc-visa"></i>
+      <i class="fab fa-cc-mastercard"></i>
+      <i class="fab fa-cc-paypal"></i>
+      <i class="fab fa-cc-apple-pay"></i>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="js/main.js"></script>
+<script>
+let allProducts = [];
+let currentFilter = 'all';
+
+$(document).ready(function(){
+  const params = new URLSearchParams(window.location.search);
+  const search = params.get('search');
+  
+  $.getJSON('https://fakestoreapi.com/products', function(data){
+    allProducts = data;
+    if(search){
+      allProducts = data.filter(p => p.title.toLowerCase().includes(search.toLowerCase()) || p.category.toLowerCase().includes(search.toLowerCase()));
+      $('#filterCount').text(`Search: "${search}" — ${allProducts.length} results`);
+    }
+    renderProducts(allProducts);
+  });
+  updateBadges();
+});
+
+function renderProducts(products){
+  if(!products.length){ $('#productsGrid').html('<div class="no-results" style="grid-column:1/-1;text-align:center;padding:60px"><i class="fa fa-search" style="font-size:60px;color:#ddd;display:block;margin-bottom:20px"></i><h3>No products found</h3><p style="color:#6b7280;margin-top:8px">Try a different search term or category</p></div>'); return; }
+  let html = '';
+  products.forEach(p => { html += buildProductCard(p); });
+  $('#productsGrid').html(html);
+  $('#filterCount').text(`${products.length} products`);
+}
+
+function filterBy(cat, btn){
+  $('.filter-btn').removeClass('active');
+  $(btn).addClass('active');
+  currentFilter = cat;
+  const filtered = cat==='all' ? allProducts : allProducts.filter(p=>p.category===cat);
+  renderProducts(filtered);
+}
+
+function sortProducts(){
+  const sort = $('#sortSelect').val();
+  let filtered = currentFilter==='all' ? [...allProducts] : allProducts.filter(p=>p.category===currentFilter);
+  if(sort==='price-asc') filtered.sort((a,b)=>a.price-b.price);
+  else if(sort==='price-desc') filtered.sort((a,b)=>b.price-a.price);
+  else if(sort==='rating') filtered.sort((a,b)=>(b.rating?.rate||0)-(a.rating?.rate||0));
+  else if(sort==='name') filtered.sort((a,b)=>a.title.localeCompare(b.title));
+  renderProducts(filtered);
+}
+
+function searchProducts(){
+  const q = $('#searchInput').val().trim();
+  if(q) window.location.href = `products.html?search=${encodeURIComponent(q)}`;
+}
+$('#searchInput').keypress(function(e){ if(e.which===13) searchProducts(); });
+</script>
+</body>
+</html>

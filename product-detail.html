@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product Detail - ShopZone</title>
+<link rel="stylesheet" href="css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<div class="topbar">
+  <span><i class="fa fa-truck"></i> Free Shipping on orders over $50</span>
+  <span><i class="fa fa-headset"></i> 24/7 Support</span>
+  <span><i class="fa fa-tag"></i> Summer Sale — Up to 40% OFF</span>
+</div>
+<nav class="navbar">
+  <a href="index.html" class="logo">Shop<span>Zone</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="categories.html">Categories</a>
+    <a href="products.html" class="active">Products</a>
+    <a href="favorites.html">Favorites</a>
+    <a href="cart.html">Cart</a>
+  </div>
+  <div class="nav-search">
+    <input type="text" id="searchInput" placeholder="Search products...">
+    <button onclick="searchProducts()"><i class="fa fa-search"></i></button>
+  </div>
+  <div class="nav-icons">
+    <a href="favorites.html" class="icon-btn"><i class="fa fa-heart"></i><span class="badge" id="favCount"></span></a>
+    <a href="cart.html" class="icon-btn"><i class="fa fa-shopping-cart"></i><span class="badge" id="cartCount"></span></a>
+  </div>
+  <div class="hamburger" onclick="toggleMenu()"><i class="fa fa-bars"></i></div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html">Home</a>
+  <a href="categories.html">Categories</a>
+  <a href="products.html">Products</a>
+  <a href="favorites.html">Favorites</a>
+  <a href="cart.html">Cart</a>
+</div>
+
+<div class="page-header" style="padding:30px 20px">
+  <div class="breadcrumb"><a href="index.html">Home</a> / <a href="products.html">Products</a> / <span id="breadcrumbTitle">Product</span></div>
+</div>
+
+<section class="product-detail-section container">
+  <div id="detailContainer">
+    <div class="loading-spinner"><i class="fa fa-spinner fa-spin"></i> Loading product...</div>
+  </div>
+</section>
+
+<!-- RELATED PRODUCTS -->
+<section class="products-section container" style="margin-top:20px">
+  <div class="section-header">
+    <h2 class="section-title">Related Products</h2>
+    <a href="products.html" class="view-all">View All <i class="fa fa-arrow-right"></i></a>
+  </div>
+  <div class="products-grid" id="relatedProducts">
+    <div class="loading-spinner"><i class="fa fa-spinner fa-spin"></i></div>
+  </div>
+</section>
+
+<div class="toast" id="toast"></div>
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fa fa-arrow-up"></i></button>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <div class="logo">Shop<span>Zone</span></div>
+      <p>Your one-stop destination for premium products at unbeatable prices.</p>
+      <div class="social-links">
+        <a href="#"><i class="fab fa-facebook"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-youtube"></i></a>
+      </div>
+    </div>
+    <div class="footer-links">
+      <h4>Quick Links</h4>
+      <a href="index.html">Home</a>
+      <a href="products.html">Products</a>
+      <a href="categories.html">Categories</a>
+      <a href="cart.html">Cart</a>
+      <a href="favorites.html">Favorites</a>
+    </div>
+    <div class="footer-links">
+      <h4>Support</h4>
+      <a href="#">FAQ</a>
+      <a href="#">Shipping Policy</a>
+      <a href="#">Return Policy</a>
+      <a href="#">Contact Us</a>
+      <a href="#">Privacy Policy</a>
+    </div>
+    <div class="footer-links">
+      <h4>Contact</h4>
+      <p><i class="fa fa-map-marker-alt"></i> Karachi, Pakistan</p>
+      <p><i class="fa fa-phone"></i> +92-300-1234567</p>
+      <p><i class="fa fa-envelope"></i> info@shopzone.pk</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2025 ShopZone. All rights reserved.</p>
+    <div class="payment-icons">
+      <i class="fab fa-cc-visa"></i>
+      <i class="fab fa-cc-mastercard"></i>
+      <i class="fab fa-cc-paypal"></i>
+      <i class="fab fa-cc-apple-pay"></i>
+    </div>
+  </div>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="js/main.js"></script>
+<script>
+let currentProduct = null;
+let selectedQty = 1;
+
+$(document).ready(function(){
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get('id');
+  if(!id){ window.location.href='products.html'; return; }
+  
+  $.getJSON(`https://fakestoreapi.com/products/${id}`, function(product){
+    currentProduct = product;
+    renderProductDetail(product);
+    $('#breadcrumbTitle').text(product.title.substring(0,30)+'...');
+    loadRelated(product.category, product.id);
+  }).fail(function(){ $('#detailContainer').html('<p style="text-align:center;padding:60px;color:#ef4444">Product not found.</p>'); });
+  
+  updateBadges();
+});
+
+function renderProductDetail(p){
+  const favs = getFavorites();
+  const isFav = favs.some(f=>f.id===p.id);
+  const rating = p.rating?.rate || 4.0;
+  const count = p.rating?.count || 0;
+  const stars = '★'.repeat(Math.round(rating)) + '☆'.repeat(5-Math.round(rating));
+  const oldPrice = (p.price * 1.2).toFixed(2);
+
+  const html = `
+  <div class="product-detail-layout">
+    <div class="product-images">
+      <div class="main-image" id="mainImage">
+        <img src="${p.image}" alt="${p.title}" id="mainImg">
+      </div>
+      <div class="thumb-strip" id="thumbStrip">
+        <div class="thumb active" onclick="changeImg('${p.image}', this)"><img src="${p.image}" alt=""></div>
+      </div>
+    </div>
+    <div class="product-detail-info">
+      <span class="product-category">${p.category}</span>
+      <h1>${p.title}</h1>
+      <div class="detail-rating">
+        <span class="stars">${stars}</span>
+        <span style="font-weight:600">${rating}</span>
+        <span style="color:#6b7280">(${count} reviews)</span>
+      </div>
+      <div class="detail-price">
+        $${p.price.toFixed(2)}
+        <span class="old">$${oldPrice}</span>
+        <span style="background:#dcfce7;color:#16a34a;font-size:14px;padding:4px 10px;border-radius:20px;font-weight:700;margin-left:12px">20% OFF</span>
+      </div>
+      <p class="detail-desc">${p.description}</p>
+      
+      <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:16px;margin-bottom:24px;display:flex;gap:24px;flex-wrap:wrap">
+        <span style="color:#16a34a;font-size:14px;font-weight:600"><i class="fa fa-check-circle"></i> In Stock</span>
+        <span style="color:#16a34a;font-size:14px;font-weight:600"><i class="fa fa-truck"></i> Free Delivery</span>
+        <span style="color:#16a34a;font-size:14px;font-weight:600"><i class="fa fa-shield-alt"></i> 1 Year Warranty</span>
+        <span style="color:#16a34a;font-size:14px;font-weight:600"><i class="fa fa-undo"></i> Easy Returns</span>
+      </div>
+      
+      <div class="quantity-selector">
+        <label>Quantity:</label>
+        <div class="qty-large">
+          <button onclick="changeQty(-1)">−</button>
+          <span id="qtyDisplay">1</span>
+          <button onclick="changeQty(1)">+</button>
+        </div>
+      </div>
+      
+      <div class="detail-actions">
+        <button class="btn-primary" onclick="addDetailToCart()"><i class="fa fa-cart-plus"></i> Add to Cart</button>
+        <button class="btn-secondary" onclick="buyNow()"><i class="fa fa-bolt"></i> Buy Now</button>
+        <button class="fav-btn-large ${isFav?'active':''}" id="detailFavBtn" onclick="toggleDetailFav()"><i class="fa fa-heart"></i></button>
+      </div>
+      
+      <div class="product-meta">
+        <div class="meta-row"><strong>Category:</strong><span>${p.category}</span></div>
+        <div class="meta-row"><strong>SKU:</strong><span>SZ-${p.id.toString().padStart(5,'0')}</span></div>
+        <div class="meta-row"><strong>Rating:</strong><span>${rating} / 5 (${count} reviews)</span></div>
+        <div class="meta-row"><strong>Availability:</strong><span style="color:#16a34a;font-weight:600">In Stock</span></div>
+      </div>
+    </div>
+  </div>`;
+  
+  $('#detailContainer').html(html);
+
+  // After render, load real thumbnail images from same category
+  $.getJSON(`https://fakestoreapi.com/products/category/${encodeURIComponent(p.category)}?limit=5`, function(catProducts){
+    const thumbImgs = [p.image, ...catProducts.filter(x=>x.id!==p.id).slice(0,3).map(x=>x.image)];
+    const thumbsHtml = thumbImgs.map((img, i) =>
+      `<div class="thumb ${i===0?'active':''}" onclick="changeImg('${img}', this)"><img src="${img}" alt=""></div>`
+    ).join('');
+    $('#thumbStrip').html(thumbsHtml);
+  });
+}
+
+function changeImg(src, el){
+  $('#mainImg').fadeOut(200, function(){
+    $(this).attr('src', src).fadeIn(200);
+  });
+  $('.thumb').removeClass('active');
+  $(el).addClass('active');
+}
+
+function changeQty(dir){
+  selectedQty = Math.max(1, selectedQty + dir);
+  $('#qtyDisplay').text(selectedQty);
+}
+
+function addDetailToCart(){
+  if(!currentProduct) return;
+  addToCartDirect(currentProduct, selectedQty);
+  updateBadges();
+}
+
+function buyNow(){
+  if(!currentProduct) return;
+  addToCartDirect(currentProduct, selectedQty);
+  window.location.href = 'checkout.html';
+}
+
+function toggleDetailFav(){
+  if(!currentProduct) return;
+  let favs = getFavorites();
+  const idx = favs.findIndex(f=>f.id===currentProduct.id);
+  if(idx>-1){
+    favs.splice(idx,1);
+    $('#detailFavBtn').removeClass('active');
+    showToast('Removed from favorites');
+  } else {
+    favs.push(currentProduct);
+    $('#detailFavBtn').addClass('active');
+    showToast('❤ Added to favorites!','success');
+  }
+  saveFavorites(favs);
+  updateBadges();
+}
+
+function loadRelated(category, excludeId){
+  $.getJSON(`https://fakestoreapi.com/products/category/${encodeURIComponent(category)}?limit=4`, function(data){
+    let html = '';
+    data.filter(p=>p.id!=excludeId).slice(0,4).forEach(p=>{ html += buildProductCard(p); });
+    $('#relatedProducts').html(html||'<p style="grid-column:1/-1;text-align:center;color:#6b7280">No related products found.</p>');
+  });
+}
+
+function searchProducts(){
+  const q = $('#searchInput').val().trim();
+  if(q) window.location.href = `products.html?search=${encodeURIComponent(q)}`;
+}
+</script>
+</body>
+</html>

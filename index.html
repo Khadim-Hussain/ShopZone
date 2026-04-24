@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ShopZone - Premium Shopping</title>
+<link rel="stylesheet" href="css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<!-- PAGE LOADER -->
+<div id="pageLoader">
+  <div class="loader-logo">Shop<span>Zone</span></div>
+  <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
+</div>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <span><i class="fa fa-truck"></i> Free Shipping on orders over $50</span>
+  <span><i class="fa fa-headset"></i> 24/7 Support</span>
+  <span><i class="fa fa-tag"></i> Summer Sale — Up to 40% OFF</span>
+</div>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="index.html" class="logo">Shop<span>Zone</span></a>
+  <div class="nav-links">
+    <a href="index.html" class="active">Home</a>
+    <a href="categories.html">Categories</a>
+    <a href="products.html">Products</a>
+    <a href="favorites.html">Favorites</a>
+    <a href="cart.html">Cart</a>
+  </div>
+  <div class="nav-search">
+    <input type="text" id="searchInput" placeholder="Search products...">
+    <button onclick="searchProducts()"><i class="fa fa-search"></i></button>
+  </div>
+  <div class="nav-icons">
+    <a href="favorites.html" class="icon-btn"><i class="fa fa-heart"></i><span class="badge" id="favCount">0</span></a>
+    <a href="cart.html" class="icon-btn"><i class="fa fa-shopping-cart"></i><span class="badge" id="cartCount">0</span></a>
+  </div>
+  <div class="hamburger" onclick="toggleMenu()"><i class="fa fa-bars"></i></div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html">Home</a>
+  <a href="categories.html">Categories</a>
+  <a href="products.html">Products</a>
+  <a href="favorites.html">Favorites</a>
+  <a href="cart.html">Cart</a>
+</div>
+
+<!-- HERO SLIDER -->
+<section class="slider-section">
+  <div class="slider" id="slider">
+    <div class="slide active" style="background-image: url('https://images.unsplash.com/photo-1498049794561-7780e7231661?w=1400&q=80');">
+      <div class="slide-overlay"></div>
+      <div class="slide-inner">
+        <div class="slide-content">
+          <span class="slide-tag"><i class="fa fa-star"></i> New Arrivals</span>
+          <h1>Discover Premium <br><span>Electronics</span></h1>
+          <p>Latest gadgets at unbeatable prices. Shop the future today.</p>
+          <div class="slide-btns">
+            <a href="categories.html?cat=electronics" class="btn-primary">Shop Now <i class="fa fa-arrow-right"></i></a>
+            <a href="products.html" class="btn-ghost">View All</a>
+          </div>
+          <div class="slide-stats">
+            <div class="stat"><strong>500+</strong><span>Products</span></div>
+            <div class="stat"><strong>4.9★</strong><span>Rating</span></div>
+            <div class="stat"><strong>Free</strong><span>Shipping</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1400&q=80');">
+      <div class="slide-overlay"></div>
+      <div class="slide-inner">
+        <div class="slide-content">
+          <span class="slide-tag"><i class="fa fa-fire"></i> Trending Now</span>
+          <h1>Fashion That <br><span>Speaks Volumes</span></h1>
+          <p>Curated styles for every occasion. Elevate your wardrobe.</p>
+          <div class="slide-btns">
+            <a href="categories.html?cat=clothing" class="btn-primary">Explore Now <i class="fa fa-arrow-right"></i></a>
+            <a href="products.html" class="btn-ghost">View All</a>
+          </div>
+          <div class="slide-stats">
+            <div class="stat"><strong>200+</strong><span>Styles</span></div>
+            <div class="stat"><strong>New</strong><span>Weekly</span></div>
+            <div class="stat"><strong>Easy</strong><span>Returns</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=1400&q=80');">
+      <div class="slide-overlay"></div>
+      <div class="slide-inner">
+        <div class="slide-content">
+          <span class="slide-tag"><i class="fa fa-bolt"></i> Summer Sale</span>
+          <h1>Up to 40% Off <br><span>Home & Living</span></h1>
+          <p>Transform your space with our exclusive collection.</p>
+          <div class="slide-btns">
+            <a href="categories.html?cat=home" class="btn-primary">Get Deal <i class="fa fa-arrow-right"></i></a>
+            <a href="products.html" class="btn-ghost">View All</a>
+          </div>
+          <div class="slide-stats">
+            <div class="stat"><strong>300+</strong><span>Items</span></div>
+            <div class="stat"><strong>Sale</strong><span>Ends Soon</span></div>
+            <div class="stat"><strong>24/7</strong><span>Support</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button class="slider-btn prev" onclick="changeSlide(-1)"><i class="fa fa-chevron-left"></i></button>
+  <button class="slider-btn next" onclick="changeSlide(1)"><i class="fa fa-chevron-right"></i></button>
+  <div class="slider-dots" id="sliderDots"></div>
+  <div class="slider-progress"><div class="slider-progress-bar" id="sliderProgress"></div></div>
+</section>
+
+<!-- CATEGORIES STRIP -->
+<section class="categories-strip">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <h2 class="section-title" style="text-align:left;margin-bottom:6px">Shop by Category</h2>
+        <p style="color:var(--text-muted);font-size:15px">Explore our wide range of collections</p>
+      </div>
+      <a href="categories.html" class="view-all">View All <i class="fa fa-arrow-right"></i></a>
+    </div>
+    <div class="cat-grid">
+      <a href="categories.html?cat=electronics" class="cat-card" style="--cat-bg:url('https://images.unsplash.com/photo-1498049794561-7780e7231661?w=400&q=80')">
+        <div class="cat-img-bg"></div>
+        <div class="cat-body">
+          <div class="cat-icon"><i class="fa fa-laptop"></i></div>
+          <div class="cat-info">
+            <span>Electronics</span>
+            <small>120+ Products</small>
+          </div>
+        </div>
+        <div class="cat-arrow"><i class="fa fa-arrow-right"></i></div>
+      </a>
+      <a href="categories.html?cat=clothing" class="cat-card" style="--cat-bg:url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&q=80')">
+        <div class="cat-img-bg"></div>
+        <div class="cat-body">
+          <div class="cat-icon"><i class="fa fa-shirt"></i></div>
+          <div class="cat-info">
+            <span>Clothing</span>
+            <small>200+ Products</small>
+          </div>
+        </div>
+        <div class="cat-arrow"><i class="fa fa-arrow-right"></i></div>
+      </a>
+      <a href="categories.html?cat=jewelry" class="cat-card" style="--cat-bg:url('https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&q=80')">
+        <div class="cat-img-bg"></div>
+        <div class="cat-body">
+          <div class="cat-icon"><i class="fa fa-gem"></i></div>
+          <div class="cat-info">
+            <span>Jewelry</span>
+            <small>80+ Products</small>
+          </div>
+        </div>
+        <div class="cat-arrow"><i class="fa fa-arrow-right"></i></div>
+      </a>
+      <a href="categories.html?cat=home" class="cat-card" style="--cat-bg:url('https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&q=80')">
+        <div class="cat-img-bg"></div>
+        <div class="cat-body">
+          <div class="cat-icon"><i class="fa fa-house"></i></div>
+          <div class="cat-info">
+            <span>Home & Living</span>
+            <small>150+ Products</small>
+          </div>
+        </div>
+        <div class="cat-arrow"><i class="fa fa-arrow-right"></i></div>
+      </a>
+      <a href="categories.html?cat=sports" class="cat-card" style="--cat-bg:url('https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=400&q=80')">
+        <div class="cat-img-bg"></div>
+        <div class="cat-body">
+          <div class="cat-icon"><i class="fa fa-dumbbell"></i></div>
+          <div class="cat-info">
+            <span>Sports</span>
+            <small>90+ Products</small>
+          </div>
+        </div>
+        <div class="cat-arrow"><i class="fa fa-arrow-right"></i></div>
+      </a>
+      <a href="products.html" class="cat-card cat-card-all">
+        <div class="cat-all-inner">
+          <div class="cat-icon"><i class="fa fa-th"></i></div>
+          <span>All Items</span>
+          <small>500+ Products</small>
+          <div class="cat-all-btn">Browse All <i class="fa fa-arrow-right"></i></div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- PROMO BANNERS -->
+<section class="promo-banners container">
+  <div class="promo-card promo-1">
+    <div>
+      <span>Limited Offer</span>
+      <h3>Buy 2 Get 1 Free</h3>
+      <p>On all clothing items</p>
+      <a href="categories.html?cat=clothing" class="btn-outline">Shop Now</a>
+    </div>
+  </div>
+  <div class="promo-card promo-2">
+    <div>
+      <span>New Arrivals</span>
+      <h3>Latest Electronics</h3>
+      <p>Starting from $9.99</p>
+      <a href="categories.html?cat=electronics" class="btn-outline">Explore</a>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED PRODUCTS -->
+<section class="products-section container">
+  <div class="section-header">
+    <h2 class="section-title">Featured Products</h2>
+    <a href="products.html" class="view-all">View All <i class="fa fa-arrow-right"></i></a>
+  </div>
+  <div class="products-grid" id="featuredProducts">
+    <div class="loading-spinner"><i class="fa fa-spinner fa-spin"></i> Loading products...</div>
+  </div>
+</section>
+
+<!-- FLASH SALE -->
+<section class="flash-sale">
+  <div class="container">
+    <div class="flash-header">
+      <h2><i class="fa fa-bolt"></i> Flash Sale</h2>
+      <div class="countdown" id="countdown">00:00:00</div>
+    </div>
+    <div class="products-grid" id="saleProducts">
+      <div class="loading-spinner"><i class="fa fa-spinner fa-spin"></i> Loading...</div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials container">
+  <h2 class="section-title">What Customers Say</h2>
+  <div class="testi-slider-wrap">
+    <button class="testi-btn testi-prev" onclick="testiSlide(-1)"><i class="fa fa-chevron-left"></i></button>
+    <div class="testi-slider" id="testiSlider">
+      <div class="testi-track" id="testiTrack">
+        <div class="testimonial-card">
+          <div class="testi-quote"><i class="fa fa-quote-left"></i></div>
+          <div class="stars">★★★★★</div>
+          <p>"Amazing quality products! Fast delivery and great customer service. Will definitely order again."</p>
+          <div class="reviewer"><div class="avatar">SA</div><div><span>Sara Ahmed</span><small>Karachi</small></div></div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testi-quote"><i class="fa fa-quote-left"></i></div>
+          <div class="stars">★★★★★</div>
+          <p>"Best online shopping experience. The product exactly matched the description. Highly recommended!"</p>
+          <div class="reviewer"><div class="avatar">MK</div><div><span>Muhammad Khan</span><small>Lahore</small></div></div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testi-quote"><i class="fa fa-quote-left"></i></div>
+          <div class="stars">★★★★☆</div>
+          <p>"Great variety and prices. Easy returns policy. ShopZone is now my go-to for everything!"</p>
+          <div class="reviewer"><div class="avatar">FA</div><div><span>Fatima Ali</span><small>Islamabad</small></div></div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testi-quote"><i class="fa fa-quote-left"></i></div>
+          <div class="stars">★★★★★</div>
+          <p>"Superb experience! Packaging was excellent and delivery was on time. Love shopping here!"</p>
+          <div class="reviewer"><div class="avatar">AR</div><div><span>Ali Raza</span><small>Peshawar</small></div></div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testi-quote"><i class="fa fa-quote-left"></i></div>
+          <div class="stars">★★★★★</div>
+          <p>"Prices are unbeatable and quality is top notch. Customer support is very responsive too!"</p>
+          <div class="reviewer"><div class="avatar">ZB</div><div><span>Zara Baig</span><small>Multan</small></div></div>
+        </div>
+      </div>
+    </div>
+    <button class="testi-btn testi-next" onclick="testiSlide(1)"><i class="fa fa-chevron-right"></i></button>
+  </div>
+  <div class="testi-dots" id="testiDots"></div>
+</section>
+
+<!-- NEWSLETTER -->
+<section class="newsletter">
+  <div class="container">
+    <h2>Stay in the Loop</h2>
+    <p>Subscribe for exclusive deals, new arrivals, and special offers</p>
+    <div class="newsletter-form">
+      <input type="email" placeholder="Enter your email address">
+      <button class="btn-primary">Subscribe <i class="fa fa-paper-plane"></i></button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <div class="logo">Shop<span>Zone</span></div>
+      <p>Your one-stop destination for premium products at unbeatable prices.</p>
+      <div class="social-links">
+        <a href="#"><i class="fab fa-facebook"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-youtube"></i></a>
+      </div>
+    </div>
+    <div class="footer-links">
+      <h4>Quick Links</h4>
+      <a href="index.html">Home</a>
+      <a href="products.html">Products</a>
+      <a href="categories.html">Categories</a>
+      <a href="cart.html">Cart</a>
+      <a href="favorites.html">Favorites</a>
+    </div>
+    <div class="footer-links">
+      <h4>Support</h4>
+      <a href="#">FAQ</a>
+      <a href="#">Shipping Policy</a>
+      <a href="#">Return Policy</a>
+      <a href="#">Contact Us</a>
+      <a href="#">Privacy Policy</a>
+    </div>
+    <div class="footer-links">
+      <h4>Contact</h4>
+      <p><i class="fa fa-map-marker-alt"></i> Karachi, Pakistan</p>
+      <p><i class="fa fa-phone"></i> +92-300-1234567</p>
+      <p><i class="fa fa-envelope"></i> info@shopzone.pk</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2025 ShopZone. All rights reserved.</p>
+    <div class="payment-icons">
+      <i class="fab fa-cc-visa"></i>
+      <i class="fab fa-cc-mastercard"></i>
+      <i class="fab fa-cc-paypal"></i>
+      <i class="fab fa-cc-apple-pay"></i>
+    </div>
+  </div>
+</footer>
+
+<!-- TOAST NOTIFICATION -->
+<div class="toast" id="toast"></div>
+
+<!-- BACK TO TOP -->
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fa fa-arrow-up"></i></button>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="js/main.js"></script>
+<script>
+$(document).ready(function(){
+  // Hide loader
+  setTimeout(function(){ $('#pageLoader').addClass('hide'); }, 1800);
+
+  loadFeaturedProducts();
+  loadSaleProducts();
+  startCountdown();
+  initSlider();
+  initTestiSlider();
+  updateBadges();
+  $(window).resize(function(){ updateTestiSlider(); });
+});
+
+function initSlider(){
+  const slides = $('.slide');
+  const dots = $('#sliderDots');
+  slides.each(function(i){ dots.append(`<span class="dot ${i===0?'active':''}" onclick="goToSlide(${i})"></span>`); });
+  window.currentSlide = 0;
+  startSliderProgress();
+  window.autoSlide = setInterval(()=>changeSlide(1), 5000);
+}
+
+function startSliderProgress(){
+  $('#sliderProgress').css({width:'0%',transition:'none'});
+  setTimeout(()=>$('#sliderProgress').css({width:'100%',transition:'width 5s linear'}),50);
+}
+
+function changeSlide(dir){
+  const slides = $('.slide');
+  const dots = $('.dot');
+  slides.eq(window.currentSlide).removeClass('active').addClass('prev');
+  setTimeout(()=>$('.prev').removeClass('prev'),700);
+  window.currentSlide = (window.currentSlide + dir + slides.length) % slides.length;
+  slides.eq(window.currentSlide).addClass('active');
+  dots.removeClass('active').eq(window.currentSlide).addClass('active');
+  clearInterval(window.autoSlide);
+  startSliderProgress();
+  window.autoSlide = setInterval(()=>changeSlide(1), 5000);
+}
+
+function goToSlide(i){
+  const slides = $('.slide');
+  slides.eq(window.currentSlide).removeClass('active').addClass('prev');
+  setTimeout(()=>$('.prev').removeClass('prev'),700);
+  window.currentSlide = i;
+  slides.eq(i).addClass('active');
+  $('.dot').removeClass('active').eq(i).addClass('active');
+  clearInterval(window.autoSlide);
+  startSliderProgress();
+  window.autoSlide = setInterval(()=>changeSlide(1), 5000);
+}
+
+// Testimonials Slider
+window.testiCurrent = 0;
+function initTestiSlider(){
+  const cards = $('#testiTrack .testimonial-card');
+  const dots = $('#testiDots');
+  cards.each(function(i){ dots.append(`<span class="testi-dot ${i===0?'active':''}" onclick="testiGoTo(${i})"></span>`); });
+  updateTestiSlider();
+  window.testiAuto = setInterval(()=>testiSlide(1), 4000);
+}
+
+function getTestiVisible(){
+  return $(window).width() < 768 ? 1 : $(window).width() < 1024 ? 2 : 3;
+}
+
+function updateTestiSlider(){
+  const visible = getTestiVisible();
+  const cards = $('#testiTrack .testimonial-card');
+  const total = cards.length;
+  const max = total - visible;
+  if(window.testiCurrent > max) window.testiCurrent = max;
+  if(window.testiCurrent < 0) window.testiCurrent = 0;
+  const cardW = $('#testiTrack .testimonial-card').first().outerWidth(true);
+  $('#testiTrack').css('transform', `translateX(-${window.testiCurrent * cardW}px)`);
+  $('.testi-dot').removeClass('active').eq(window.testiCurrent).addClass('active');
+}
+
+function testiSlide(dir){
+  const visible = getTestiVisible();
+  const total = $('#testiTrack .testimonial-card').length;
+  window.testiCurrent = (window.testiCurrent + dir + (total - visible + 1)) % (total - visible + 1);
+  updateTestiSlider();
+}
+
+function testiGoTo(i){
+  window.testiCurrent = i;
+  updateTestiSlider();
+  clearInterval(window.testiAuto);
+  window.testiAuto = setInterval(()=>testiSlide(1), 4000);
+}
+
+function loadFeaturedProducts(){
+  $.getJSON('https://fakestoreapi.com/products?limit=8', function(data){
+    let html = '';
+    data.forEach(p => { html += buildProductCard(p); });
+    $('#featuredProducts').html(html);
+  }).fail(function(){ $('#featuredProducts').html('<p class="error-msg">Failed to load products.</p>'); });
+}
+
+function loadSaleProducts(){
+  $.getJSON('https://fakestoreapi.com/products?limit=4', function(data){
+    let html = '';
+    data.forEach(p => {
+      const discount = Math.floor(Math.random()*30)+10;
+      const old = (p.price * (100/(100-discount))).toFixed(2);
+      html += buildProductCard(p, discount, old);
+    });
+    $('#saleProducts').html(html);
+  });
+}
+
+function buildProductCard(p, discount=0, oldPrice=0){
+  const fav = JSON.parse(localStorage.getItem('favorites')||'[]');
+  const isFav = fav.some(f=>f.id===p.id);
+  const rating = p.rating ? p.rating.rate : 4.0;
+  const stars = '★'.repeat(Math.round(rating)) + '☆'.repeat(5-Math.round(rating));
+  return `<div class="product-card" data-id="${p.id}">
+    ${discount ? `<span class="badge-sale">-${discount}%</span>` : ''}
+    <button class="fav-btn ${isFav?'active':''}" onclick="toggleFavorite(${p.id})"><i class="fa fa-heart"></i></button>
+    <a href="product-detail.html?id=${p.id}">
+      <div class="product-img"><img src="${p.image}" alt="${p.title}" loading="lazy"></div>
+      <div class="product-info">
+        <span class="product-category">${p.category}</span>
+        <h3>${p.title.substring(0,45)}${p.title.length>45?'...':''}</h3>
+        <div class="product-rating">${stars} <span>(${p.rating?.count||0})</span></div>
+        <div class="product-price">
+          $${p.price.toFixed(2)}
+          ${discount ? `<span class="old-price">$${oldPrice}</span>` : ''}
+        </div>
+      </div>
+    </a>
+    <button class="btn-add-cart" onclick="addToCart(${p.id})"><i class="fa fa-cart-plus"></i> Add to Cart</button>
+  </div>`;
+}
+
+function startCountdown(){
+  let time = 3*60*60;
+  function tick(){
+    const h = String(Math.floor(time/3600)).padStart(2,'0');
+    const m = String(Math.floor((time%3600)/60)).padStart(2,'0');
+    const s = String(time%60).padStart(2,'0');
+    $('#countdown').html(`<span>${h}</span>:<span>${m}</span>:<span>${s}</span>`);
+    if(--time < 0) time = 3*60*60;
+  }
+  tick(); setInterval(tick, 1000);
+}
+
+function searchProducts(){
+  const q = $('#searchInput').val().trim();
+  if(q) window.location.href = `products.html?search=${encodeURIComponent(q)}`;
+}
+
+$('#searchInput').keypress(function(e){ if(e.which===13) searchProducts(); });
+</script>
+</body>
+</html>

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Categories - ShopZone</title>
+<link rel="stylesheet" href="css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+<div class="topbar">
+  <span><i class="fa fa-truck"></i> Free Shipping on orders over $50</span>
+  <span><i class="fa fa-headset"></i> 24/7 Support</span>
+  <span><i class="fa fa-tag"></i> Summer Sale — Up to 40% OFF</span>
+</div>
+<nav class="navbar">
+  <a href="index.html" class="logo">Shop<span>Zone</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="categories.html" class="active">Categories</a>
+    <a href="products.html">Products</a>
+    <a href="favorites.html">Favorites</a>
+    <a href="cart.html">Cart</a>
+  </div>
+  <div class="nav-search">
+    <input type="text" id="searchInput" placeholder="Search products...">
+    <button onclick="searchProducts()"><i class="fa fa-search"></i></button>
+  </div>
+  <div class="nav-icons">
+    <a href="favorites.html" class="icon-btn"><i class="fa fa-heart"></i><span class="badge" id="favCount"></span></a>
+    <a href="cart.html" class="icon-btn"><i class="fa fa-shopping-cart"></i><span class="badge" id="cartCount"></span></a>
+  </div>
+  <div class="hamburger" onclick="toggleMenu()"><i class="fa fa-bars"></i></div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html">Home</a>
+  <a href="categories.html">Categories</a>
+  <a href="products.html">Products</a>
+  <a href="favorites.html">Favorites</a>
+  <a href="cart.html">Cart</a>
+</div>
+
+<div class="page-header">
+  <h1>Shop by Category</h1>
+  <p>Find exactly what you're looking for</p>
+  <div class="breadcrumb"><a href="index.html">Home</a> / <span>Categories</span></div>
+</div>
+
+<section class="cat-page container">
+  <div class="cat-layout">
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <h3>Filters</h3>
+      
+      <div class="sidebar-section">
+        <h4>Categories</h4>
+        <div class="sidebar-item active" id="cat-all" onclick="filterCat('all', this)"><i class="fa fa-th" style="width:20px;color:var(--primary)"></i> All Products</div>
+        <div class="sidebar-item" id="cat-elec" onclick="filterCat('electronics', this)"><i class="fa fa-laptop" style="width:20px;color:var(--primary)"></i> Electronics</div>
+        <div class="sidebar-item" id="cat-mens" onclick="filterCat(`men's clothing`, this)"><i class="fa fa-male" style="width:20px;color:var(--primary)"></i> Men's Clothing</div>
+        <div class="sidebar-item" id="cat-womens" onclick="filterCat(`women's clothing`, this)"><i class="fa fa-female" style="width:20px;color:var(--primary)"></i> Women's Clothing</div>
+        <div class="sidebar-item" id="cat-jewelry" onclick="filterCat('jewelery', this)"><i class="fa fa-gem" style="width:20px;color:var(--primary)"></i> Jewelry</div>
+      </div>
+
+      <div class="sidebar-section">
+        <h4>Price Range</h4>
+        <div class="price-range">
+          <input type="range" min="0" max="1000" value="1000" id="priceRange" oninput="updatePriceFilter(this.value)">
+          <div class="price-display"><span>$0</span><span id="priceMax">$1000</span></div>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <h4>Minimum Rating</h4>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:14px"><input type="radio" name="rating" value="0" checked style="accent-color:var(--primary)" onchange="filterRating(0)"> All Ratings</label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:14px"><input type="radio" name="rating" value="4" style="accent-color:var(--primary)" onchange="filterRating(4)"> ★★★★☆ & Up</label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:14px"><input type="radio" name="rating" value="4.5" style="accent-color:var(--primary)" onchange="filterRating(4.5)"> ★★★★★ Only</label>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <h4>Sort By</h4>
+        <select style="width:100%;border:1.5px solid #e5e7eb;padding:8px 12px;border-radius:8px;font-size:14px;font-family:var(--font-main);outline:none" onchange="sortResults(this.value)">
+          <option value="default">Default</option>
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+          <option value="rating">Top Rated</option>
+        </select>
+      </div>
+
+      <button class="btn-primary" style="width:100%;justify-content:center;margin-top:4px" onclick="resetFilters()"><i class="fa fa-redo"></i> Reset Filters</button>
+    </div>
+
+    <!-- PRODUCTS -->
+    <div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+        <span id="resultCount" style="color:#6b7280;font-size:14px"></span>
+        <div style="display:flex;gap:8px">
+          <button class="filter-btn active" onclick="setView('grid',this)" title="Grid View"><i class="fa fa-th"></i></button>
+          <button class="filter-btn" onclick="setView('list',this)" title="List View"><i class="fa fa-list"></i></button>
+        </div>
+      </div>
+      <div class="products-grid" id="catProducts">
+        <div class="loading-spinner"><i class="fa fa-spinner fa-spin"></i> Loading...</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="toast" id="toast"></div>
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fa fa-arrow-up"></i></button>
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <div class="logo">Shop<span>Zone</span></div>
+      <p>Your one-stop destination for premium products at unbeatable prices.</p>
+      <div class="social-links">
+        <a href="#"><i class="fab fa-facebook"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-youtube"></i></a>
+      </div>
+    </div>
+    <div class="footer-links">
+      <h4>Quick Links</h4>
+      <a href="index.html">Home</a>
+      <a href="products.html">Products</a>
+      <a href="categories.html">Categories</a>
+      <a href="cart.html">Cart</a>
+      <a href="favorites.html">Favorites</a>
+    </div>
+    <div class="footer-links">
+      <h4>Support</h4>
+      <a href="#">FAQ</a>
+      <a href="#">Shipping Policy</a>
+      <a href="#">Return Policy</a>
+      <a href="#">Contact Us</a>
+      <a href="#">Privacy Policy</a>
+    </div>
+    <div class="footer-links">
+      <h4>Contact</h4>
+      <p><i class="fa fa-map-marker-alt"></i> Karachi, Pakistan</p>
+      <p><i class="fa fa-phone"></i> +92-300-1234567</p>
+      <p><i class="fa fa-envelope"></i> info@shopzone.pk</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2025 ShopZone. All rights reserved.</p>
+    <div class="payment-icons">
+      <i class="fab fa-cc-visa"></i>
+      <i class="fab fa-cc-mastercard"></i>
+      <i class="fab fa-cc-paypal"></i>
+      <i class="fab fa-cc-apple-pay"></i>
+    </div>
+  </div>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="js/main.js"></script>
+<script>
+let allProds = [];
+let activeCategory = 'all';
+let maxPrice = 1000;
+let minRating = 0;
+let sortMode = 'default';
+
+$(document).ready(function(){
+  const params = new URLSearchParams(window.location.search);
+  const cat = params.get('cat');
+  
+  $.getJSON('https://fakestoreapi.com/products', function(data){
+    allProds = data;
+    if(cat){
+      const catMap = { electronics: 'electronics', clothing: "women's clothing", jewelry: 'jewelery', home: 'electronics' };
+      if(catMap[cat]){ filterCat(catMap[cat], null); return; }
+    }
+    renderProducts(allProds);
+  });
+  updateBadges();
+});
+
+function renderProducts(products){
+  if(!products.length){ $('#catProducts').html('<div style="grid-column:1/-1;text-align:center;padding:60px;color:#6b7280"><i class="fa fa-search" style="font-size:50px;display:block;margin-bottom:16px;color:#ddd"></i><h3>No products found</h3><p>Try adjusting your filters</p></div>'); return; }
+  let html = '';
+  products.forEach(p=>{ html += buildProductCard(p); });
+  $('#catProducts').html(html);
+  $('#resultCount').text(`Showing ${products.length} product${products.length>1?'s':''}`);
+}
+
+function getFiltered(){
+  let items = [...allProds];
+  if(activeCategory!=='all') items = items.filter(p=>p.category===activeCategory);
+  items = items.filter(p=>p.price<=maxPrice);
+  items = items.filter(p=>(p.rating?.rate||0)>=minRating);
+  if(sortMode==='price-asc') items.sort((a,b)=>a.price-b.price);
+  else if(sortMode==='price-desc') items.sort((a,b)=>b.price-a.price);
+  else if(sortMode==='rating') items.sort((a,b)=>(b.rating?.rate||0)-(a.rating?.rate||0));
+  return items;
+}
+
+function filterCat(cat, el){
+  activeCategory = cat;
+  $('.sidebar-item').removeClass('active');
+  if(el) $(el).addClass('active');
+  renderProducts(getFiltered());
+}
+
+function updatePriceFilter(val){
+  maxPrice = parseInt(val);
+  $('#priceMax').text('$'+val);
+  renderProducts(getFiltered());
+}
+
+function filterRating(val){ minRating = parseFloat(val); renderProducts(getFiltered()); }
+function sortResults(val){ sortMode = val; renderProducts(getFiltered()); }
+
+function resetFilters(){
+  activeCategory='all'; maxPrice=1000; minRating=0; sortMode='default';
+  $('#priceRange').val(1000); $('#priceMax').text('$1000');
+  $('input[name=rating]').first().prop('checked',true);
+  $('.sidebar-item').removeClass('active').first().addClass('active');
+  renderProducts(allProds);
+}
+
+function setView(v, btn){
+  $('.filter-btn').removeClass('active'); $(btn).addClass('active');
+  if(v==='list'){ $('#catProducts').css({'grid-template-columns':'1fr'}); }
+  else { $('#catProducts').css({'grid-template-columns':''}); }
+}
+
+function searchProducts(){
+  const q = $('#searchInput').val().trim();
+  if(q) window.location.href = `products.html?search=${encodeURIComponent(q)}`;
+}
+</script>
+</body>
+</html>
