@@ -7,7 +7,7 @@ function getFavorites(){ return JSON.parse(localStorage.getItem('favorites')||'[
 function saveFavorites(favs){ localStorage.setItem('favorites', JSON.stringify(favs)); updateBadges(); }
 
 function addToCart(productId, qty=1){
-  $.getJSON(`https://api.escuelajs.co/api/v1/products/${productId}`, function(product){
+  $.getJSON(`https://fakestoreapi.com/products/${productId}`, function(product){
     let cart = getCart();
     const existing = cart.find(i=>i.id===product.id);
     if(existing){ existing.qty += qty; }
@@ -41,7 +41,7 @@ function updateCartQty(productId, qty){
 }
 
 function toggleFavorite(productId){
-  $.getJSON(`https://api.escuelajs.co/api/v1/products/${productId}`, function(product){
+  $.getJSON(`https://fakestoreapi.com/products/${productId}`, function(product){
     let favs = getFavorites();
     const idx = favs.findIndex(f=>f.id===product.id);
     if(idx>-1){
